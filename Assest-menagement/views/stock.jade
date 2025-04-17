@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  .container.mt-4
+    h1 Stock View
+    .card
+      .card-header
+        h5 Assets in Stock
+      .card-body
+        table.table.table-striped.table-bordered
+          thead
+            tr
+              th Branch
+              th Category
+              th Make/Model
+              th Serial Number
+              th Purchase Date
+              th Purchase Cost
+          tbody
+            each asset in stock
+              tr
+                td= asset.branch
+                td= asset.category.name
+                td= `${asset.make} ${asset.model}`
+                td= asset.serialNumber
+                td= asset.purchaseDate.toLocaleDateString()
+                td= `$${asset.purchaseCost.toFixed(2)}`
+        
+        h4.mt-4 Branch Summary
+        table.table.table-bordered
+          thead
+            tr
+              th Branch
+              th Asset Count
+              th Total Value
+          tbody
+            each summary, branch in branchSummary
+              tr
+                td= branch
+                td= summary.count
+                td= `$${summary.value.toFixed(2)}`
+          tfoot
+            tr
+              th Total
+              th= stock.length
+              th= `$${totalValue.toFixed(2)}`

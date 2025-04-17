@@ -1,0 +1,66 @@
+extends layout
+
+block content
+  .container.mt-4
+    h1 Employee Master
+    .card
+      .card-header
+        .d-flex.justify-content-between.align-items-center
+          h5.mb-0 Employee List
+          a.btn.btn-primary(href="/employees/new") Add Employee
+      .card-body
+        .row.mb-3
+          .col-md-4
+            select#statusFilter.form-select
+              option(value="all") All Employees
+              option(value="true") Active Only
+              option(value="false") Inactive Only
+          .col-md-4
+            input#searchInput.form-control(type="text" placeholder="Search employees...")
+        table#employeesTable.table.table-striped.table-bordered
+          thead
+            tr
+              th ID
+              th Name
+              th Email
+              th Branch
+              th Department
+              th Position
+              th Status
+              th Actions
+          tbody
+            each employee in employees
+              tr
+                td= employee.id
+                td= `${employee.firstName} ${employee.lastName}`
+                td= employee.email
+                td= employee.branch
+                td= employee.department
+                td= employee.position
+                td
+                  if employee.isActive
+                    span.badge.bg-success Active
+                  else
+                    span.badge.bg-danger Inactive
+                td
+                  a.btn.btn-sm.btn-info(href=`/employees/${employee.id}/edit`) Edit
+
+  script.
+    $(document).ready(function() {
+      const table = $('#employeesTable').DataTable({
+        responsive: true
+      });
+      
+      $('#statusFilter').change(function() {
+        const status = $(this).val();
+        if (status === 'all') {
+          table.column(6).search('').draw();
+        } else {
+          table.column(6).search(status).draw();
+        }
+      });
+      
+      $('#searchInput').keyup(function() {
+        table.search($(this).val()).draw();
+      });
+    });
